@@ -32,7 +32,7 @@ async function receipt(){
                     condiments: JSON.parse(localStorage.getItem("condiments"))};
     console.log(JSON.stringify(orderData));
 
-    let req = {
+    let request = {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -41,7 +41,7 @@ async function receipt(){
     };
 
     try {
-        let response = await fetch(host + "/orders", req);
+        let response = await fetch(host + "/orders", request);
         if (response.status == 201) {
                 message = "Order Success:" + JSON.stringify(orderData);
             } 
@@ -86,7 +86,7 @@ if (document.getElementById('orderMenu')) {
 
 async function getReceipt() {
     let host = "https://coffee-order-latest-qz6y.onrender.com";
-    let req = {
+    let request = {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -95,7 +95,7 @@ async function getReceipt() {
     let url = host + "/orders";
 
     try {
-        let response = await fetch(url, req);
+        let response = await fetch(url, request);
         let result = await response.json();
         console.log(result);
 
