@@ -26,7 +26,6 @@ function resetCondiments(){
 }
 
 async function receipt(){
-    // let host = "http://localhost:8080";
     let host = "https://coffee-order-latest-qz6y.onrender.com";
     let message = "";
     let orderData = {beverage: localStorage.getItem("beverage"), 
@@ -96,7 +95,7 @@ async function getReceipt() {
     let url = host + "/orders";
 
     try {
-        let response = await fetch(url, request);
+        let response = await fetch(url, req);
         let result = await response.json();
         console.log(result);
 
