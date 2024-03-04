@@ -19,6 +19,39 @@ function removeCondiment(buttonValue) {
     localStorage.setItem("condiments", JSON.stringify(condiments));
 }
 
+function resetCondiments(){
+    // Reset all selections
+    localStorage.setItem("condiments", JSON.stringify(""));
+    localStorage.setItem("beverage", "");
+}
+
+async function receipt(){
+    // let host = "http://localhost:8080";
+    let host = "https://coffee-order-latest-qz6y.onrender.com";
+    let message = "";
+    let orderData = {beverage: localStorage.getItem("beverage"), 
+                    condiments: JSON.parse(localStorage.getItem("condiments"))};
+    console.log(JSON.stringify(orderData));
+
+    let req = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderData)
+    };
+
+    try {
+        let response = await fetch(host + "/orders", req);
+        if (response.status == 201) {
+                message = "Order Success:" + JSON.stringify(orderData);
+            } 
+    } catch (error) {
+        message = "The following error occurred: " + error + "\n\nPlease try again or contact the customer support team";
+    }
+    console.log(message);
+}
+
 function setElements() {
     // Creating drink buttons for the menu
     let order = document.getElementById("orderMenu");
@@ -52,7 +85,49 @@ if (document.getElementById('orderMenu')) {
     window.onload = setElements;
 }
 
-function getReceipt() {
+async function getReceipt() {
+    let host = "https://coffee-order-latest-qz6y.onrender.com";
+    let req = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    let url = host + "/orders";
+
+    try {
+        let response = await fetch(url, request);
+        let result = await response.json();
+        console.log(result);
+
+        let receipt = document.getElementById("getReceipt");
+        receipt.innerHTML = "";
+        let title = document.createElement("h2");
+        let titleVal = document.createTextNode("Order Placed:");
+        title.appendChild(titleVal);
+        receipt.appendChild(title);
+
+        let id = document.createElement("h2");
+        let idVal = document.createTextNode("Order id: " + result.id);
+        id.appendChild(idVal);
+        receipt.appendChild(id);
+
+        let cond = document.createElement("h2");
+        let condVal = document.createTextNode(result.description)
+        cond.appendChild(condVal);
+        receipt.appendChild(cond);
+
+        let total = document.createElement("h2");
+        let totalVal = document.createTextNode("Total: $" + result.cost);
+        total.appendChild(totalVal);
+        receipt.appendChild(total);
+
+    } catch (error) {
+        let message = "The following error occurred:\n" + error + "\n\nPlease try again or contact the customer support team";
+        alert(message);
+    }
+
+
     let receipt = document.getElementById("getReceipt");
     receipt.innerHTML = "";
     let title = document.createElement("h2");
